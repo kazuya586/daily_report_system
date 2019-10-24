@@ -90,7 +90,7 @@ public class Report {
         return content;
     }
 
-    public void setContent() {
+    public void setContent(String content) {
         this.content = content;
     }
 
@@ -98,7 +98,7 @@ public class Report {
         return created_at;
     }
 
-    public void setCreated_at() {
+    public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
 
@@ -106,7 +106,7 @@ public class Report {
         return updated_at;
     }
 
-    public void setUploaded_at(Timestamp updated_at){
+    public void setUpdated_at(Timestamp updated_at){
         this.updated_at = updated_at;
     }
 }
