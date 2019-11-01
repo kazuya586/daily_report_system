@@ -9,6 +9,28 @@
             </div>
         </c:if>
         <h2>日報　一覧</h2>
+        <p>日記ユーザー選択</p>
+        <select name="selectUserValue" id="selectUser">
+          <c:choose>
+            <c:when test="${ selectedUser == loginUser.id }">
+              <option value="${ loginUser.id }" selected><c:out value="${ loginUser.name }" /></option>
+            </c:when>
+            <c:otherwise>
+              <option value="${ loginUser.id }"><c:out value="${ loginUser.name }" /></option>
+            </c:otherwise>
+          </c:choose>
+          <c:forEach var="result" items="${ results }">
+            <c:choose>
+              <c:when test="${ selectedUser == result.employeeApproval.id }">
+                <option value="${ result.employeeApproval.id }" selected><c:out value="${result.employeeApproval.name }" /></option>
+              </c:when>
+              <c:otherwise>
+                <option value="${ result.employeeApproval.id }"><c:out value="${result.employeeApproval.name }" /></option>
+              </c:otherwise>
+            </c:choose>
+          </c:forEach>
+        </select>
+
         <table id="report_list">
             <tbody>
                 <tr>
@@ -33,7 +55,7 @@
             <c:forEach var="i" begin="1" end="${ ((reports_count - 1) / 15) + 1}" step="1">
                 <c:choose>
                     <c:when test="${ i == page }">
-                        <c;out value="${ i }">&nbsp;
+                        <c;out value="${ i }" />&nbsp;
                     </c:when>
                     <c:otherwise>
                         <a href="<c:url value='/reports/index?page=${ i }' />"><c:out value="${ i }" /></a>&nbsp;
@@ -42,5 +64,11 @@
             </c:forEach>
         </div>
         <p><a href="<c:url value='/reports/new' />">新規日報の登録</a></p>
+        <script>
+          $('#selectUser').change(function(){
+              var selectedUser = $('option:selected').val();
+              location.href="<c:url value='/reports/index?employee_id="+selectedUser+"'/>";
+          });
+        </script>
     </c:param>
 </c:import>

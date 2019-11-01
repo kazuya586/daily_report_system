@@ -10,7 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import models.Approval;
 import models.Employee;
 import utils.DBUtil;
 
@@ -35,6 +37,13 @@ public class EmployeesIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        HttpSession session = ((HttpServletRequest)request).getSession();
+        Employee loginUser = (Employee)session.getAttribute("login_employee");
+        int loginUser_id = loginUser.getId();
+
+        //フォローボタン制御に必要
+        List<Approval> approvals = em.createNamedQuery("getAllApprovalUsers", Approval.class).setParameter("applicantUser", loginUser_id).setParameter("deleteFlg", false).getResultList();
+
         int page = 1;
         try {
             page = Integer.parseInt(request.getParameter("page"));
@@ -53,6 +62,9 @@ public class EmployeesIndexServlet extends HttpServlet {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
+
+        request.setAttribute("loginUser_id",loginUser_id);
+        request.setAttribute("approvals", approvals);
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/index.jsp");
         rd.forward(request, response);
